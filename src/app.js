@@ -77,6 +77,35 @@ app.delete("/user" , async (req,res) => {
     }
 })
 
+app.patch("/user" , async (req,res) => {
+    const userEmail = req.body.emailID;
+    const userId = req.body.Id;
+
+    try {
+        const email = await User.findByIdAndUpdate(userId , { emailID: userEmail});
+        res.send("Updated the email");
+    }
+    catch (err) {
+        res.status(400).send("Something went wrong!" + err.message);
+    }
+})
+
+app.patch("/userUpdateByEmail" , async (req,res) => {
+    const oldEmail = req.body.oldEmailID;
+    const newEmail = req.body.newEmailID;
+
+    try {
+        const updatedUser = await User.findOneAndUpdate(
+            { emailID: oldEmail },               // Filter query
+            { $set: { emailID: newEmail } }     // Update operation
+        );
+        res.send("Updated Siuccessfully!");
+    }
+    catch (err) {
+        res.status(400).send("Something went wrong!" + err.message);
+    }
+})
+
 connectDB().then(() => {
     console.log("Database connected successfully!");
     app.listen(7777 , () => {
