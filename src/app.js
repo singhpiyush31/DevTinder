@@ -77,7 +77,7 @@ app.delete("/user" , async (req,res) => {
     }
 })
 
-app.patch("/user" , async (req,res) => {
+app.patch("/userUpdateEmailById" , async (req,res) => {
     const userEmail = req.body.emailID;
     const userId = req.body.Id;
 
