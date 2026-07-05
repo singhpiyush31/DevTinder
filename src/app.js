@@ -104,6 +104,25 @@ app.patch("/userUpdateByEmail" , async (req,res) => {
     catch (err) {
         res.status(400).send("Something went wrong!" + err.message);
     }
+});
+
+app.patch("/user" , async (req,res) => {
+    const userId = req.body.Id;
+    const data = req.body;
+
+    try {
+        console.log(data);
+        const userUpdated = await User.findOneAndUpdate(
+            { _id: userId } ,
+            { $set: data },
+            { returnDocument: 'after' }
+        );
+        console.log(userUpdated);
+        res.send("Updated the User", userUpdated);
+    }
+    catch (err) {
+        res.status(400).send("Something went wrong!" + err.message);
+    }
 })
 
 connectDB().then(() => {
