@@ -23,12 +23,12 @@ app.post("/signup" , async (req,res) => {
 
 
 app.get("/user" , async (req,res) => {
-    const UserEmail = req.body.emailId;
-
+    const userEmail = req.query.email;
+    console.log(userEmail);
+    
     try {
 
-        const user = await User.findOne({emailId: UserEmail});
-        res.send(user);
+        const user = await User.findOne({emailID: userEmail});
         if(!user) {
             res.status(404).send("User Not Found!");
         }
@@ -61,6 +61,20 @@ app.get("/feed" , async (req,res) => {
     }
 
 
+});
+
+app.delete("/user" , async (req,res) => {
+    const userId = req.body.userId;
+    console.log(userId);
+    
+    try {
+        const user = await User.findByIdAndDelete(userId);
+
+        res.send("User deleted successfully!");
+    }
+    catch (err) {
+        res.status(400).send("Something went wrong!");
+    }
 })
 
 connectDB().then(() => {
