@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const userSchema = mongoose.Schema({
     firstName: {
@@ -16,6 +17,7 @@ const userSchema = mongoose.Schema({
         unique: true,
         lowercase: true,
         trim: true,
+        
     },
     password: {
         type: String
@@ -34,7 +36,12 @@ const userSchema = mongoose.Schema({
     },
     photoUrl: {
         type: String,
-        default: "https://www.magnific.com/free-vector/blue-circle-with-white-user_145857007.htm#fromView=keyword&page=1&position=0&uuid=85c2d831-31dc-40fd-b76b-922e92b2abd3&query=User+profile"
+        default: "https://www.magnific.com/free-vector/blue-circle-with-white-user_145857007.htm#fromView=keyword&page=1&position=0&uuid=85c2d831-31dc-40fd-b76b-922e92b2abd3&query=User+profile",
+        validate(value) {
+            if(!validator.isURL(value)) {
+                throw new Error("Invalid Photo URL: " + value); 
+            }
+        },
     },
     about: {
         type: String,
