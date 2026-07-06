@@ -106,7 +106,7 @@ app.patch("/userUpdateByEmail" , async (req,res) => {
     }
 });
 
-app.patch("/user" , async (req,res) => {
+app.patch("/userUpdate " , async (req,res) => {
     const userId = req.body.Id;
     const data = req.body;
 
@@ -122,6 +122,35 @@ app.patch("/user" , async (req,res) => {
     }
     catch (err) {
         res.status(400).send("Something went wrong!" + err.message);
+    }
+});
+
+app.patch("/user/:userId" , async (req,res) => { 
+    const userId = req.params?.userId;
+    const data = req.body;
+
+    try{
+
+        const ALLOWED_UPDATES = ["photoUrl" , "about" , "gender" , "age"]
+
+        const isUpdateAllowed = Object.keys(data).every((k) => ALLOWED_UPDATES.includes(k));
+        if(!isUpdateAllowed) {
+            throw new Error("Update will not allowed!");
+        }
+        if(data?.skills.length > 10) {
+             throw new Error("Skills cannot be more than 10");
+        }
+
+
+        const user = await User.findByIdAndUpdate({_id: userId} , data ,{
+            returnDocument: "after",
+            runValidators: true,
+        });
+        console.log(user);
+        res.send("User Updated Successfully!");
+    }
+    catch(err) {
+        res.status(400).send("Update Failed! " + err.message);
     }
 })
 
